@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>mdoll</title>
+
+    <style>
+        
+body {
+  margin: 0;
+  background: #000000;
+}
+
+.container {
+  padding-top: 50px;
+}
+
+.cover {
+  position: relative;
+      width: 250px;
+    margin: 0 auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -150px;
+	}
+  
+  .vinyl {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+  }
+  
+  .vinyl--dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #000;
+    border-radius: 50%;
+  }
+
+
+.controls {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: 130px;
+    margin-left: -70px;
+}
+
+.rotate {
+  animation-name: rotate;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes rotate {
+  0% {
+   transform: rotate(0deg); 
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+		
+		
+		.btn{
+   cursor:pointer;
+   display:inline-block;
+   padding: 10px 30px 10px 30px;
+   background: #272727;
+   border-radius: 50px;
+   color: #fff;
+   text-transform:uppercase;
+   line-height:20px;
+   
+   
+} 
+		
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+  <div class="cover">
+    <img class="vinyl rotate" src="https://imagesaws.juno.co.uk/full/CS387907-01A-BIG.jpg">
+    <div class="vinyl--dot"></div>
+  </div>
+  
+  <div class="controls">
+  
+  
+  <audio id="nyan" src="https://cdn.rawgit.com/caseyfw/slack-sounds/master/sounds/yodel.mp3" preload="metadata" type="audio/mpeg">
+   Your browser does not support the audio element.
+</audio>
+ <a class="btn" id="play">Play</a>
+
+
+  <!--  <button class="btn" id="play">pause</button>  -->
+  </div>
+</div>
+
+
+
+ <script>
+const button = document.getElementById('play');
+const vinyl = document.querySelector('.vinyl');
+
+button.addEventListener('click', (e) => {
+  if (vinyl.style.webkitAnimationPlayState === 'paused') {
+    e.target.innerText = 'pause';
+    vinyl.style.webkitAnimationPlayState = 'paused';
+  } else {
+    e.target.innerText = 'play';
+    vinyl.style.webkitAnimationPlayState = 'running';
+  }
+})
+
+</script>  
+
+
+
+    <script>
+        
+		var nyan = document.getElementById('nyan');
+var nyanBtn = document.getElementById('play');
+
+function playPause(song){
+   if (song.paused && song.currentTime >= 0 && !song.ended) {
+      song.play();
+   } else {
+      song.pause();
+   }
+}
+
+function reset(btn, song){
+   if(btn.classList.contains('playing')){
+      btn.classList.toggle('playing');
+   }
+   song.pause();
+   song.currentTime = 0;
+}
+
+function progress(btn, song){
+   setTimeout(function(){
+      var end = song.duration; 
+      var current = song.currentTime;
+      var percent = current/(end/100);
+      //check if song is at the end
+      if(current==end){
+         reset(btn, song);
+      }
+      //set inset box shadow
+      btn.style.boxShadow = "inset " + btn.offsetWidth * (percent/100) + "px 0px 0px 0px rgba(0,0,0,0.125)"
+      //call function again
+      progress(btn, song);     
+   }, 133.7);
+}
+
+nyanBtn.addEventListener('click', function(){
+   nyanBtn.classList.toggle('playing');
+   playPause(nyan);
+   progress(nyanBtn, nyan);
+});
+
+
+		
+		
+		
+    </script>  
+</body>
+</html>
